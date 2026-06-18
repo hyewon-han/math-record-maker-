@@ -6,6 +6,7 @@ const DEFAULT_OPTIONAL_FIELDS = [
   { id: 'career', type: 'career', label: '학생의 진로' },
   { id: 'teacher', type: 'teacher', label: '교사의 평가' }
 ];
+const OPTIONAL_FIELD_EXAMPLES = ['탐구 주제', '선택 동기', '맡은 역할', '문제 해결 과정', '활용한 수학 개념', '자료 분석 방법', '발표·산출물 특징', '피드백 반영 내용'];
 const BATCH_COMPETENCIES = [
   { key: 'problem', label: '문제해결 역량', matches: ['문제해결', 'problem'] },
   { key: 'reasoning', label: '추론 역량', matches: ['추론', 'reasoning'] },
@@ -369,7 +370,10 @@ function appendOptionalFieldRow(field = { id: makeId(), type: 'custom', label: '
   input.maxLength = 40;
   input.required = true;
   input.value = field.label;
-  input.placeholder = '작성 항목 이름 입력';
+  const customFieldCount = [...container.children].filter(child => child.dataset.fieldType === 'custom').length;
+  input.placeholder = field.type === 'custom'
+    ? `예: ${OPTIONAL_FIELD_EXAMPLES[customFieldCount % OPTIONAL_FIELD_EXAMPLES.length]}`
+    : '작성 항목 이름 입력';
   input.setAttribute('aria-label', '선택 작성 항목 이름');
   const remove = document.createElement('button');
   remove.type = 'button';
