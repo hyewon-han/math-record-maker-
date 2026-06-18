@@ -1,0 +1,64 @@
+.result-actions {
+  grid-template-columns: 1fr 1fr;
+}
+
+.ai-workflow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  border: 1px solid rgba(184, 155, 84, .45);
+  border-radius: 17px;
+  background: linear-gradient(115deg, rgba(255,254,250,.94), rgba(233,243,237,.88));
+  box-shadow: 0 12px 32px rgba(29,54,43,.06);
+}
+
+.ai-workflow-copy { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 5px 10px; }
+.ai-workflow-copy strong { font-size: 14px; }
+.ai-workflow-copy p { grid-column: 1 / 3; margin: 0; color: #66736c; font-size: 11px; line-height: 1.6; }
+.ai-workflow-copy p b { color: #155c43; }
+.ai-badge { padding: 4px 8px; border-radius: 999px; color: #8a6b24; background: #f5ead0; font-size: 9px; font-weight: 900; letter-spacing: .04em; }
+.ai-workflow > .prompt-button { flex: 0 0 auto; min-width: 190px; padding: 13px 17px; }
+.ai-workflow.compact { align-items: stretch; flex-direction: column; gap: 12px; margin-top: -5px; padding: 15px; box-shadow: none; }
+.ai-workflow.compact > .prompt-button { width: 100%; }
+.prompt-button:disabled { border-color: #cad3cd; color: #94a098; background: #e8ece9; box-shadow: none; cursor: not-allowed; transform: none; }
+.prompt-button:disabled::before { display: none; }
+
+.prompt-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #b89b54;
+  border-radius: 11px;
+  color: #fff;
+  background: linear-gradient(135deg, #1d3329 0%, #155c43 55%, #a88438 140%);
+  font: inherit;
+  font-weight: 850;
+  box-shadow: 0 7px 18px rgba(23, 72, 53, .2);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.prompt-button::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.18) 50%, transparent 70%);
+  content: "";
+  transform: translateX(-110%);
+  transition: .45s;
+}
+
+.prompt-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 22px rgba(23, 72, 53, .26);
+}
+
+.prompt-button:hover::before { transform: translateX(110%); }
+.prompt-button span { margin-right: 3px; color: #f4d98a; }
+
+@media (max-width: 560px) {
+  .result-actions { grid-template-columns: 1fr; }
+  .ai-workflow { align-items: stretch; flex-direction: column; gap: 13px; }
+  .ai-workflow > .prompt-button { width: 100%; }
+}

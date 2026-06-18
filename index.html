@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="수학 수행평가를 등록하고 학생 관찰 근거를 바탕으로 세특 초안을 생성합니다." />
+  <title>수학 수행평가 세특 메이커</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="prompt.css" />
+  <link rel="stylesheet" href="guide.css" />
+  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="backup.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">MATHEMATICS · STUDENT RECORD</p>
+        <div class="hero-title-row">
+          <h1>수학 수행평가<br /><em>세특 메이커</em></h1>
+          <span class="maker-badge"><small>MADE BY</small><strong>© 인창고 수학왕</strong></span>
+        </div>
+        <p class="hero-copy">평가를 먼저 설계하고, 학생별 관찰 기록을 근거 있는 세특 문장으로 정리하세요.</p>
+      </div>
+      <div class="hero-mark" aria-hidden="true">∑</div>
+    </header>
+
+    <nav class="flow-nav" aria-label="작업 단계">
+      <button class="flow-step active" data-view="register" type="button">
+        <span>1</span><strong>수행평가 등록</strong><small>평가 정보와 성취기준 설정</small>
+      </button>
+      <div class="flow-line"></div>
+      <button class="flow-step" data-view="generate" type="button">
+        <span>2</span><strong>세특 만들기</strong><small>학생별 관찰 내용 작성</small>
+      </button>
+    </nav>
+
+    <section id="registerView" class="view active">
+      <section class="home-flow" aria-labelledby="homeFlowTitle">
+        <div class="home-flow-heading">
+          <div>
+            <span class="home-flow-kicker">START HERE</span>
+            <h2 id="homeFlowTitle">한눈에 보는 사용방법</h2>
+          </div>
+          <button type="button" class="flow-guide-button" id="openGuideInline">자세히 보기 <span aria-hidden="true">?</span></button>
+        </div>
+
+        <div class="home-flow-main" aria-label="세특 작성 4단계">
+          <article class="flow-step">
+            <span class="flow-step-number">01</span>
+            <span class="flow-step-icon" aria-hidden="true">＋</span>
+            <strong>수행평가 등록</strong>
+            <small>과목 · 활동 · 성취기준</small>
+          </article>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <article class="flow-step">
+            <span class="flow-step-number">02</span>
+            <span class="flow-step-icon" aria-hidden="true">✎</span>
+            <strong>학생별 내용 입력</strong>
+            <small>관찰 근거 · 역량 · 수준</small>
+          </article>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <article class="flow-step">
+            <span class="flow-step-number">03</span>
+            <span class="flow-step-icon" aria-hidden="true">∑</span>
+            <strong>세특 초안 생성</strong>
+            <small>설정한 분량으로 자동 작성</small>
+          </article>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <article class="flow-step">
+            <span class="flow-step-number">04</span>
+            <span class="flow-step-icon" aria-hidden="true">✓</span>
+            <strong>검토 후 복사</strong>
+            <small>사실 확인 후 최종 사용</small>
+          </article>
+        </div>
+
+        <div class="home-ai-path">
+          <span class="ai-path-label">AI로 더 고급스럽게</span>
+          <div class="ai-path-steps">
+            <strong>수행평가별 프롬프트 복사</strong><span>→</span>
+            <strong>새 AI 대화방에 한 번 붙여넣기</strong><span>→</span>
+            <strong>학생별 초안만 반복 입력</strong>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <div><span class="kicker">STEP 01</span><h2>수행평가 등록</h2><p>한 번 등록하면 여러 학생의 세특 작성에 반복해서 사용할 수 있습니다.</p></div>
+        <span id="assessmentCount" class="badge">등록 0개</span>
+      </div>
+
+      <div class="register-layout">
+        <form id="assessmentForm" class="card form-card">
+          <input type="hidden" id="editingId" />
+          <div class="card-title"><span class="card-icon">＋</span><h3 id="formTitle">새 수행평가</h3></div>
+
+          <label class="field">
+            <span>수행평가명 <b>*</b></span>
+            <input id="assessmentName" placeholder="예: 이차함수로 최적의 농구 슛 분석하기" required />
+          </label>
+
+          <label class="field">
+            <span>과목 <b>*</b></span>
+            <select id="assessmentSubject" required>
+              <option value="">과목을 선택하세요</option>
+              <option>공통수학1</option><option>공통수학2</option><option>대수</option>
+              <option>미적분Ⅰ</option><option>미적분Ⅱ</option><option>확률과 통계</option>
+              <option>기하</option><option>경제수학</option><option>인공지능수학</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>수행평가 주제 및 활동 <b>*</b></span>
+            <textarea id="assessmentActivity" rows="5" placeholder="학생이 수행할 과제, 탐구 과정, 산출물 등을 구체적으로 입력하세요." required></textarea>
+          </label>
+
+          <fieldset class="standards-field">
+            <legend>관련 성취기준 <b>*</b></legend>
+            <p id="standardsGuide">과목을 선택하면 해당 성취기준이 표시됩니다.</p>
+            <div id="standardToolbar" class="standard-toolbar hidden">
+              <span id="selectedStandardCount">0개 선택</span>
+              <div><button type="button" id="selectAllStandards">전체 선택</button><button type="button" id="clearStandards">선택 해제</button></div>
+            </div>
+            <div id="standardsList" class="standards-list"></div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button id="cancelEdit" type="button" class="ghost-button hidden">취소</button>
+            <button type="submit" class="primary-button"><span id="saveButtonText">수행평가 등록하기</span><b>→</b></button>
+          </div>
+        </form>
+
+        <aside class="card list-card">
+          <div class="card-title list-card-title">
+            <div class="list-title-text"><span class="card-icon">✓</span><h3>등록된 수행평가</h3></div>
+            <div class="backup-actions" aria-label="수행평가 백업">
+              <button type="button" id="exportAssessments" class="backup-button" title="등록된 수행평가를 파일로 저장">↓ 내보내기</button>
+              <button type="button" id="importAssessments" class="backup-button" title="백업 파일에서 수행평가 복원">↑ 불러오기</button>
+              <input type="file" id="backupFileInput" accept="application/json,.json" hidden />
+            </div>
+          </div>
+          <p class="backup-note">백업 파일로 다른 컴퓨터에서도 복원할 수 있으며, 불러온 내용은 기존 목록과 안전하게 합쳐집니다.</p>
+          <div id="assessmentList" class="assessment-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="generateView" class="view">
+      <div class="section-title">
+        <div><span class="kicker">STEP 02</span><h2>학생 세특 만들기</h2><p>등록한 평가를 선택하고 학생별 관찰 근거를 입력하세요.</p></div>
+        <button type="button" id="backToRegister" class="outline-button">＋ 수행평가 추가</button>
+      </div>
+
+      <div class="generate-layout">
+        <form id="studentForm" class="card form-card">
+          <label class="field">
+            <span>수행평가 선택 <b>*</b></span>
+            <select id="assessmentSelect" required><option value="">등록한 수행평가를 선택하세요</option></select>
+          </label>
+          <div id="selectedAssessment" class="selected-assessment hidden"></div>
+
+          <section class="ai-workflow compact" aria-label="수행평가별 AI 활용 안내">
+            <div class="ai-workflow-copy">
+              <span class="ai-badge">AI 고급 다듬기</span>
+              <strong>수행평가마다 새 AI 대화방에 한 번</strong>
+              <p>평가를 선택한 뒤 전용 프롬프트를 붙여넣고, 같은 평가의 학생별 초안을 연속해서 보내세요.</p>
+            </div>
+            <button type="button" id="copyAssessmentPrompt" class="prompt-button" disabled title="선택한 수행평가의 활동과 성취기준을 포함한 AI 지침을 복사합니다"><span>✦</span> 수행평가별 프롬프트 복사</button>
+          </section>
+
+          <label class="field">
+            <span>학생 관찰 근거 <b>*</b></span>
+            <textarea id="studentEvidence" rows="7" placeholder="학생이 실제로 보인 행동, 풀이 과정, 발표 내용, 산출물의 특징, 피드백 반영 과정 등을 자유롭게 입력하세요." required></textarea>
+            <small>평가나 추측보다 직접 관찰한 사실을 구체적으로 적을수록 좋은 문장이 만들어집니다.</small>
+          </label>
+
+          <label class="field">
+            <span>학생의 진로 계열 <i class="optional">선택</i></span>
+            <input id="careerTrack" list="careerTrackOptions" placeholder="예: 공학, 자연과학, 의약학" />
+            <datalist id="careerTrackOptions">
+              <option value="인문사회"></option><option value="자연과학"></option>
+              <option value="공학"></option><option value="의약학"></option>
+              <option value="교육"></option><option value="상경"></option>
+              <option value="예술·체육"></option><option value="진로 탐색 중"></option>
+            </datalist>
+            <small>목록에서 고르거나 학생의 진로 계열을 직접 입력할 수 있습니다.</small>
+          </label>
+
+          <label class="field">
+            <span>교사의 평가 <i class="optional">선택</i></span>
+            <textarea id="teacherEvaluation" rows="4" placeholder="예: 복잡한 풀이도 끝까지 검토하며 오류를 스스로 수정하는 태도가 인상적임"></textarea>
+            <small>학생의 성취, 태도, 성장 과정에 관한 교사의 종합 평가를 입력하세요.</small>
+          </label>
+
+          <fieldset class="choice-field">
+            <legend>강조할 수학 역량 <b>*</b> <small>여러 개 선택 가능</small></legend>
+            <div id="competencyChoices" class="chip-grid">
+              <label><input type="checkbox" value="problem" /><span>문제해결 역량</span></label>
+              <label><input type="checkbox" value="reasoning" /><span>추론 역량</span></label>
+              <label><input type="checkbox" value="communication" /><span>의사소통 역량</span></label>
+              <label><input type="checkbox" value="connection" /><span>연결 역량</span></label>
+              <label><input type="checkbox" value="information" /><span>정보처리 역량</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-field">
+            <legend>학생 성취 수준 <b>*</b></legend>
+            <div class="segment-grid four">
+              <label><input type="radio" name="achievement" value="excellent" checked /><span><strong>매우 우수</strong><small>깊이 있는 이해·확장</small></span></label>
+              <label><input type="radio" name="achievement" value="good" /><span><strong>우수</strong><small>정확한 이해·적용</small></span></label>
+              <label><input type="radio" name="achievement" value="steady" /><span><strong>보통</strong><small>기본 개념·성실한 수행</small></span></label>
+              <label><input type="radio" name="achievement" value="growth" /><span><strong>성장 중</strong><small>피드백 반영·발전</small></span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-field">
+            <legend>분량 설정 <b>*</b></legend>
+            <div class="segment-grid three">
+              <label><input type="radio" name="length" value="short" /><span><strong>간결하게</strong><small>약 250~350자</small></span></label>
+              <label><input type="radio" name="length" value="medium" checked /><span><strong>보통</strong><small>약 400~550자</small></span></label>
+              <label><input type="radio" name="length" value="long" /><span><strong>상세하게</strong><small>약 600자 이상</small></span></label>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="primary-button full"><span>세특 초안 만들기</span><b>✦</b></button>
+        </form>
+
+        <section class="card result-card" aria-live="polite">
+          <div class="result-heading"><div><span class="card-icon">✦</span><h3>생성된 세특 초안</h3></div><span id="charCount" class="count">0자 · 0바이트</span></div>
+          <div id="emptyState" class="empty-state"><div>∫</div><p>왼쪽에서 정보를 입력하면<br />수학 교과 세특 초안이 만들어집니다.</p></div>
+          <div id="resultArea" class="result-area hidden">
+            <textarea id="result" aria-label="생성된 세특 초안"></textarea>
+            <div class="notice">관찰 근거를 최우선으로 구성한 초안입니다. 교사가 실제로 확인한 사실과 일치하는지 검토하고, AI에 붙여넣기 전 이름·학번이 없는지 확인하세요.</div>
+            <div class="result-actions">
+              <button type="button" id="regenerate" class="secondary-button">↻ 다른 표현</button>
+              <button type="button" id="copyResult" class="copy-button">복사하기</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <footer><span>∴</span> 모든 입력과 수행평가 정보는 이 브라우저에만 저장되며 외부로 전송되지 않습니다.</footer>
+  </main>
+  <button type="button" id="helpButton" class="help-button" aria-haspopup="dialog" aria-controls="helpModal"><span>?</span><small>사용방법</small></button>
+
+  <div id="helpModal" class="guide-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <button type="button" id="helpBackdrop" class="guide-backdrop" aria-label="사용방법 창 닫기"></button>
+    <section class="guide-panel">
+      <header class="guide-header">
+        <div><span class="guide-kicker">QUICK GUIDE</span><h2 id="helpTitle">세특 메이커 사용방법</h2></div>
+        <button type="button" id="closeHelp" class="guide-close" aria-label="닫기">×</button>
+      </header>
+
+      <div class="guide-body">
+        <section class="guide-section">
+          <div class="guide-section-title"><span>01</span><div><strong>기본 세특 만들기</strong><p>프로그램 안에서 초안을 만드는 과정입니다.</p></div></div>
+          <div class="guide-flow basic-flow">
+            <div class="guide-step"><b>1</b><strong>수행평가 등록</strong><small>과목·활동·성취기준 설정</small></div><i>→</i>
+            <div class="guide-step"><b>2</b><strong>평가 선택</strong><small>작성할 수행평가 선택</small></div><i>→</i>
+            <div class="guide-step"><b>3</b><strong>관찰 근거 입력</strong><small>실제로 확인한 행동 기록</small></div><i>→</i>
+            <div class="guide-step"><b>4</b><strong>초안 생성</strong><small>검토 후 바로 복사</small></div>
+          </div>
+        </section>
+
+        <section class="guide-section premium-guide">
+          <div class="guide-section-title"><span>02</span><div><strong>더 고급스럽게 바꾸고 싶다면?</strong><p>각 교사가 사용하는 무료 생성형 AI에서 한 번 더 다듬습니다.</p></div></div>
+          <div class="guide-flow premium-flow">
+            <div class="guide-step accent"><b>1</b><strong>수행평가 선택</strong><small>먼저 평가를 선택</small></div><i>→</i>
+            <div class="guide-step accent"><b>2</b><strong>평가별 프롬프트 복사</strong><small>버튼을 한 번 클릭</small></div><i>→</i>
+            <div class="guide-step accent"><b>3</b><strong>새 AI 대화방에 붙여넣기</strong><small>ChatGPT 등 각자의 AI 사용</small></div><i>→</i>
+            <div class="guide-step accent"><b>4</b><strong>학생별 초안만 붙여넣기</strong><small>이후 ‘복사하기’만 반복</small></div>
+          </div>
+          <div class="guide-tip"><span>!</span><p><strong>수행평가가 바뀌면 새 AI 대화방을 여세요.</strong> 같은 평가의 학생 초안은 한 대화방에 연속해서 붙여넣을 수 있습니다.</p></div>
+        </section>
+
+        <div class="privacy-guide"><span>✓</span><p>AI에 붙여넣기 전 <strong>이름·학번 등 개인정보가 없는지</strong> 반드시 확인하세요.</p></div>
+      </div>
+
+      <footer class="guide-footer"><button type="button" id="dismissHelp">확인했어요</button></footer>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="standards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
