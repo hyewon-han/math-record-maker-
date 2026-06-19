@@ -635,6 +635,8 @@ function deleteAssessment(id) {
     assessments = previousAssessments;
     return;
   }
+  delete batchDrafts[id];
+  saveBatchDrafts({ skipSnapshot: true });
   renderAssessmentList();
   renderAssessmentSelect();
   showToast('수행평가를 삭제했습니다.');
@@ -1689,7 +1691,7 @@ function applyBatchPaste() {
   if (!raw) return showToast('엑셀에서 복사한 내용을 붙여넣어 주세요.');
   const lines = raw.split(/\r?\n/).filter(line => line.trim());
   let rows = lines.map(line => line.split('\t'));
-  if (/교사용|번호|관찰\s*근거/u.test(rows[0]?.join(' ') || '')) rows = rows.slice(1);
+  if (/교사용|번호|관찰\s*근거/u.test(rows[0]?.[0] || '')) rows = rows.slice(1);
   if (replaceBatchRows(item, rows, '붙여넣은 표')) $('#batchPasteInput').value = '';
 }
 
